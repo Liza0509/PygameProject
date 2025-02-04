@@ -13,7 +13,6 @@ items = [
 weapon = ''
 armor = ''
 pygame.init()
-print(123)
 # Размеры окна и ячеек
 CELL_SIZE = 50
 GRID_SIZE = 10
@@ -24,7 +23,8 @@ trader_position = None  # Позиция торговца
 trader_visible = False  # Отображается ли торговец
 
 # Установка размеров окна
-screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE + UI_HEIGHT))
+screen = pygame.display.set_mode((WINDOW_SIZE,
+                                  WINDOW_SIZE + UI_HEIGHT))
 pygame.display.set_caption("Клеточное поле 10x10")
 
 # Цвета
@@ -38,24 +38,37 @@ font = pygame.font.SysFont("Arial", 20)
 
 # Загрузка и изменение размера изображений
 miner_image = pygame.image.load("data/miner.png")
-miner_image = pygame.transform.scale(miner_image, (CELL_SIZE, CELL_SIZE))
+miner_image = pygame.transform.scale(miner_image,
+                                     (CELL_SIZE, CELL_SIZE))
 rock_image = pygame.image.load("data/rock.png")
-rock_image = pygame.transform.scale(rock_image, (CELL_SIZE, CELL_SIZE))
+rock_image = pygame.transform.scale(rock_image,
+                                    (CELL_SIZE, CELL_SIZE))
 spider_image = pygame.image.load("data/spider.png")
-spider_image = pygame.transform.scale(spider_image, (CELL_SIZE, CELL_SIZE))
+spider_image = pygame.transform.scale(spider_image,
+                                      (CELL_SIZE, CELL_SIZE))
 stairs_image = pygame.image.load("data/stairs.png")
-stairs_image = pygame.transform.scale(stairs_image, (CELL_SIZE, CELL_SIZE))
+stairs_image = pygame.transform.scale(stairs_image,
+                                      (CELL_SIZE, CELL_SIZE))
 
 
 # Функция для генерации нового уровня
 def generate_level(level):
-    global miner_position, rock_positions, spider_positions, spider_healths, stairs_position, hidden_stairs, trader_position, trader_visible
+    global miner_position, rock_positions, \
+        spider_positions, \
+        spider_healths, stairs_position,\
+        hidden_stairs,\
+        trader_position, \
+        trader_visible
 
-    if level % 5 == 0:  # Уровень с торговцем
-        trader_position = [random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
-        miner_position = [random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
+    if level % 2 == 0:  # Уровень с торговцем
+        trader_position = [random.randint(0,
+                                          GRID_SIZE - 1),
+                           random.randint(0, GRID_SIZE - 1)]
+        miner_position = [random.randint(0, GRID_SIZE - 1),
+                          random.randint(0, GRID_SIZE - 1)]
         while trader_position == miner_position:
-            trader_position = [random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
+            trader_position = [random.randint(0, GRID_SIZE - 1),
+                               random.randint(0, GRID_SIZE - 1)]
 
         rock_positions = set()
         spider_positions = []
@@ -83,7 +96,8 @@ def generate_level(level):
             spider_position = [random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
             while (tuple(spider_position) == tuple(miner_position) or
                    tuple(spider_position) in rock_positions):
-                spider_position = [random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
+                spider_position = [random.randint(0,
+                                                  GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)]
             spider_positions.append(spider_position)
             spider_healths.append(10)
 
@@ -239,14 +253,16 @@ while running:
                 money += (diamond_count * 10) + (ruby_count * 15) + (emerald_count * 20)  # Пример цен
                 diamond_count = ruby_count = emerald_count = 0  # Сброс камней
         # Проверка взаимодействия с торговцем
-        if trader_visible and is_adjacent(miner_position, trader_position):
+        if trader_visible and is_adjacent(miner_position,
+                                          trader_position):
             # Вызов всплывающего окна торговли
             draw_trade_window()
 
     # Обработка кликов мыши
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
         mouse_x, mouse_y = event.pos
-        clicked_cell = (mouse_x // CELL_SIZE, mouse_y // CELL_SIZE)
+        clicked_cell = (mouse_x // CELL_SIZE,
+                        mouse_y // CELL_SIZE)
 
         # Обработка кликов мыши
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -255,7 +271,8 @@ while running:
 
             # Добыча камня
             # Добыча камня
-            if (tuple(clicked_cell) in rock_positions and is_adjacent(miner_position, clicked_cell)):
+            if (tuple(clicked_cell) in rock_positions and is_adjacent(miner_position,
+                                                                      clicked_cell)):
                 rock_positions.remove(tuple(clicked_cell))
                 miner_inventory += 1
 
@@ -279,7 +296,8 @@ while running:
 
             # Переход на следующий уровень только при клике на лестницу
             if clicked_cell == stairs_position and not hidden_stairs:
-                if is_adjacent(miner_position, stairs_position):
+                if is_adjacent(miner_position,
+                               stairs_position):
                     level += 1
                     generate_level(level)
 
@@ -289,14 +307,16 @@ while running:
     draw_grid()
     # Рисуем камни
     for position in rock_positions:
-        screen.blit(rock_image, (position[0] * CELL_SIZE, position[1] * CELL_SIZE))
+        screen.blit(rock_image, (position[0] * CELL_SIZE,
+                                 position[1] * CELL_SIZE))
     # Рисуем лестницу, если она открыта
     if not hidden_stairs:
         if stairs_position is not None:
             screen.blit(stairs_image, (stairs_position[0] * CELL_SIZE, stairs_position[1] * CELL_SIZE))
 
     # Рисуем изображение шахтёра
-    screen.blit(miner_image, (miner_position[0] * CELL_SIZE, miner_position[1] * CELL_SIZE))
+    screen.blit(miner_image, (miner_position[0] * CELL_SIZE,
+                              miner_position[1] * CELL_SIZE))
     # Рисуем пауков
     for spider_position in spider_positions:
         screen.blit(spider_image, (spider_position[0] * CELL_SIZE, spider_position[1] * CELL_SIZE))
@@ -304,13 +324,15 @@ while running:
     # Рисуем торговца, если он виден
     if trader_visible:
         trader_image = pygame.image.load("data/trader.png")
-        trader_image = pygame.transform.scale(trader_image, (CELL_SIZE, CELL_SIZE))
+        trader_image = pygame.transform.scale(trader_image,
+                                              (CELL_SIZE, CELL_SIZE))
         screen.blit(trader_image, (trader_position[0] * CELL_SIZE, trader_position[1] * CELL_SIZE))
 
     trading = False  # Флаг для торговли
 
     # Взаимодействие с торговцем
-    if trader_visible and is_adjacent(miner_position, trader_position):
+    if trader_visible and is_adjacent(miner_position,
+                                      trader_position):
         trading = True
 
     if trading:
@@ -322,7 +344,8 @@ while running:
         # Обработка клика мыши
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_x, mouse_y = event.pos
-            if buy_button.collidepoint(mouse_x, mouse_y):
+            if buy_button.collidepoint(mouse_x,
+                                       mouse_y):
                 f = True
                 continue
                 # for i in range (len(buttons)):
@@ -368,75 +391,86 @@ while running:
                 mouse_x, mouse_y = event.pos
                 for rect, item in buttons:
                     if rect.collidepoint(mouse_x, mouse_y):
-                        #print(item['name'])
+                        # print(item['name'])
                         if item['name'] == "Лёгкий клинок":
                             if money <= 100:
                                 print('недостаточно денег')
-                            if weapon == "Лёгкий клинок":
+                            elif weapon == "Лёгкий клинок":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 100
-                            weapon = "Лёгкий клинок"
-                            miner_damage=5 +2
-                            print('buy ' + item['name'], weapon)
+                            else:
+                                money -= 100
+                                weapon = "Лёгкий клинок"
+                                miner_damage = 5 + 2
+                                print('buy ' + item['name'], weapon)
                         elif item['name'] == "Тяжёлый меч":
                             if money <= 200:
                                 print('недостаточно денег')
-                            if weapon == "Тяжёлый меч":
+                            elif weapon == "Тяжёлый меч":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 200
-                            weapon = "Тяжёлый меч"
-                            miner_damage=5 + 5
-                            print('buy ' + item['name'], weapon)
+                            else:
+                                money -= 200
+                                weapon = "Тяжёлый меч"
+                                miner_damage = 5 + 5
+                                print('buy ' + item['name'], weapon)
                         elif item['name'] == "Эпический меч":
                             if money <= 500:
                                 print('недостаточно денег')
-                            if weapon == "Эпический меч":
+                            elif weapon == "Эпический меч":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 500
-                            weapon = "Эпический меч"
-                            miner_damage=5 + 10
-                            print('buy ' + item['name'], weapon)
+                            else:
+                                money -= 500
+                                weapon = "Эпический меч"
+                                miner_damage = 5 + 10
+                                print('buy ' + item['name'], weapon)
                         elif item['name'] == "Кожаная броня":
                             if money <= 150:
                                 print('недостаточно денег')
-                            if armor == "Кожаная броня":
+                            elif armor == "Кожаная броня":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 150
-                            armor = "Кожаная броня"
-                            miner_health=50 + 10
-                            print('buy ' + item['name'], armor)
+                            else:
+                                money -= 150
+                                armor = "Кожаная броня"
+                                miner_health = 50 + 10
+                                print('buy ' + item['name']
+                                  , armor)
                         elif item['name'] == "Стальная броня":
                             if money <= 400:
                                 print('недостаточно денег')
-                            if armor == "Стальная броня":
+                            elif armor == "Стальная броня":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 400
-                            armor = "Стальная броня"
-                            miner_health=50 + 25
-                            print('buy ' + item['name'], armor)
+                            else:
+                                money -= 400
+                                armor = "Стальная броня"
+                                miner_health = 50 + 25
+                                print('buy ' + item['name'],
+                                  armor)
                         elif item['name'] == "Мифриловая броня":
                             if money <= 800:
                                 print('недостаточно денег')
-                            if armor == "Мифриловая броня":
+                            elif armor == "Мифриловая броня":
                                 print(item['name'] + " уже куплен")
                                 break
-                            money -= 800
-                            armor = "Мифриловая броня"
-                            miner_health = 50 + 50
-                            print('buy ' + item['name'], armor)
+                            else:
+                                money -= 800
+                                armor = "Мифриловая броня"
+                                miner_health = 50 + 50
+                                print('buy ' + item['name'],
+                                  armor)
                         break
 
     # Отображение здоровья шахтёра
-    miner_health_text = font.render(f"Шахтёр: {miner_health} HP", True, GREEN)
+    miner_health_text = font.render(f"Шахтёр: {miner_health} HP",
+                                    True, GREEN)
     screen.blit(miner_health_text, (100, WINDOW_SIZE + 10))
     # Отображение здоровья пауков
     for i, spider_position in enumerate(spider_positions):
-        spider_health_text = font.render(f"Паук {i + 1}: {spider_healths[i]} HP", True, RED)
+        spider_health_text = font.render(f"Паук {i + 1}: {spider_healths[i]} HP",
+                                         True, RED)
         screen.blit(spider_health_text, (WINDOW_SIZE - 150, 10 + i * 20))
     # Отображение
     inventory_text = font.render(f"Камни: {miner_inventory}", True, BLACK)
@@ -450,8 +484,13 @@ while running:
     screen.blit(diamond_text, (10, WINDOW_SIZE + 70))
     ruby_text = font.render(f"Рубины: {ruby_count}", True, (255, 0, 0))  # Красный
     screen.blit(ruby_text, (10, WINDOW_SIZE + 100))
-    emerald_text = font.render(f"Изумруды: {emerald_count}", True, (0, 255, 0))  # Зелёный
-    screen.blit(emerald_text, (10, WINDOW_SIZE + 130))
+    emerald_text = font.render(
+        f"Изумруды: {emerald_count}",
+        True, (0, 255, 0)
+    )  # Зелёный
+    screen.blit(emerald_text,
+                (10, WINDOW_SIZE + 130)
+                )
     # Обновление экрана
     pygame.display.flip()
     # Проверка здоровья
@@ -459,6 +498,8 @@ while running:
         break
 # Вывод результата
 if miner_health <= 0:
-    print("Шахтёр проиграл!")
+    print(
+        "Шахтёр проиграл!"
+    )
 # Завершение работы Pygame
 pygame.quit()
