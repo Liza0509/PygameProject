@@ -60,7 +60,7 @@ def generate_level(level):
         trader_position, \
         trader_visible
 
-    if level % 2 == 0:  # Уровень с торговцем
+    if level % 1 == 0:  # Уровень с торговцем
         trader_position = [random.randint(0,
                                           GRID_SIZE - 1),
                            random.randint(0, GRID_SIZE - 1)]
